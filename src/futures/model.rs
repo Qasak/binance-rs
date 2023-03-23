@@ -76,7 +76,7 @@ pub struct PriceStats {
     pub count: u64,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TradeHistory {
     pub buyer: bool,
@@ -98,6 +98,13 @@ pub struct TradeHistory {
     pub position_side: String,
     pub symbol: String,
     pub time: u64,
+}
+
+impl std::fmt::Debug for TradeHistory {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let json = serde_json::to_string_pretty(&self).map_err(|_| std::fmt::Error)?;
+        write!(f, "{}", json)
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
