@@ -349,7 +349,7 @@ pub struct PositionRisk {
     pub update_time: u64,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FuturesAsset {
     pub asset: String,
@@ -380,7 +380,14 @@ pub struct FuturesAsset {
     pub update_time: u64,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+impl std::fmt::Debug for FuturesAsset {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let json = serde_json::to_string_pretty(&self).map_err(|_| std::fmt::Error)?;
+        write!(f, "{}", json)
+    }
+}
+
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FuturesPosition {
     pub symbol: String,
@@ -413,6 +420,13 @@ pub struct FuturesPosition {
     pub bid_notional: f64,
     #[serde(with = "string_or_float")]
     pub ask_notional: f64,
+}
+
+impl std::fmt::Debug for FuturesPosition {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let json = serde_json::to_string_pretty(&self).map_err(|_| std::fmt::Error)?;
+        write!(f, "{}", json)
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
