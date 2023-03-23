@@ -454,7 +454,7 @@ pub struct AccountInformation {
     pub positions: Vec<FuturesPosition>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AccountBalance {
     pub account_alias: String,
@@ -471,6 +471,13 @@ pub struct AccountBalance {
     pub max_withdraw_amount: f64,
     pub margin_available: bool,
     pub update_time: u64,
+}
+
+impl std::fmt::Debug for AccountBalance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let json = serde_json::to_string_pretty(&self).map_err(|_| std::fmt::Error)?;
+        write!(f, "{}", json)
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
