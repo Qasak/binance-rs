@@ -212,7 +212,7 @@ pub struct OpenInterestHist {
     pub timestamp: u64,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Order {
     pub client_order_id: String,
@@ -508,6 +508,24 @@ pub struct ChangeLeverageResponse {
     #[serde(with = "string_or_float")]
     pub max_notional_value: f64,
     pub symbol: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct LongShortRatio {
+    #[serde(with = "string_or_float")]
+    pub buy_sell_ratio: f64,
+    #[serde(with = "string_or_float")]
+    pub buy_vol: f64,
+    #[serde(with = "string_or_float")]
+    pub sell_vol: f64,
+    pub timestamp: u64,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(untagged)]
+pub enum LongShortRatios {
+    AllLongShortRatios(Vec<LongShortRatio>),
 }
 
 fn default_stop_price() -> f64 {

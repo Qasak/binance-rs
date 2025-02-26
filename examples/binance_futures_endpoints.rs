@@ -102,4 +102,12 @@ fn market_data() {
         Ok(answer) => println!("Open interest: {:?}", answer),
         Err(e) => println!("Error: {}", e),
     }
+
+    match market.long_short_ratio("btcusdt", "5m", 2, None, None) {
+        Ok(LongShortRatios::AllLongShortRatios(answer)) => println!(
+            "{}",
+            serde_json::to_string_pretty(&answer).unwrap()
+        ),
+        Err(e) => println!("Error: {}", e),
+    }
 }

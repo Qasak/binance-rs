@@ -16,13 +16,13 @@
 - [ ] `Open Interest Statistics (MARKET_DATA)`
 - [ ] `Top Trader Long/Short Ratio (Accounts) (MARKET_DATA)`
 - [ ] `Top Trader Long/Short Ratio (Positions) (MARKET_DATA)`
-- [ ] `Long/Short Ratio (MARKET_DATA)`
+- [x] `Long/Short Ratio (MARKET_DATA)`
 - [ ] `Taker Buy/Sell Volume (MARKET_DATA)`
 */
 
 use crate::util::{build_request, build_signed_request};
 use crate::futures::model::{
-    AggTrades, BookTickers, KlineSummaries, KlineSummary, LiquidationOrders, MarkPrices,
+    AggTrades, BookTickers, KlineSummaries, KlineSummary, LiquidationOrders, LongShortRatios, MarkPrices,
     OpenInterest, OpenInterestHist, OrderBook, PriceStats, SymbolPrice, Tickers, Trades,
 };
 use crate::client::Client;
@@ -288,5 +288,40 @@ impl FuturesMarket {
         let request = build_request(parameters);
         self.client
             .get(API::Futures(Futures::OpenInterestHist), Some(request))
+    }
+
+    pub fn long_short_ratio<S1, S2, S3, S4, S5>(
+        &self,
+        symbol: S1,
+        period: S2,
+        limit: S3,
+        start_time: S4,
+        end_time: S5,
+    ) -> Result<LongShortRatios>
+    where
+        S1: Into<String>,
+        S2: Into<String>,
+        S3: Into<Option<u64>>,
+        S4: Into<Option<u64>>,
+        S5: Into<Option<u64>>,
+    {
+        let mut parameters: BTreeMap<String, String> = BTreeMap::new();
+        parameters.insert("symbol".into(), symbol.into());
+        parameters.insert("period".into(), period.into());
+
+        if let Some(limit) = limit.into() {
+            parameters.insert("limit".into(), format!("{}", limit));
+        }
+
+        if let Some(start_time) = start_time.into() {
+            parameters.insert("startTime".into(), format!("{}", start_time));
+        }
+
+        if let Some(end_time) = end_time.into() {
+            parameters.insert("endTime".into(), format!("{}", end_time));
+        }
+        let request = build_request(parameters);
+
+        self.client.get(API::Futures(Futures::LongShortRatio), Some(request))
     }
 }
